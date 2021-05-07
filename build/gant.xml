@@ -1,3 +1,4 @@
+<!--从根目录执行到这里，传了参数gant.script=${project.home}/build/scripts/idea_community.gant,gant.target=default-->
 <project name="Test gant invocation from Ant script" default="doGant" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
   <dirname property="build.dir" file="${ant.file}"/>
   <property name="project.home" value="${build.dir}/.."/>
@@ -39,6 +40,7 @@
       overwrite="true"/>
   </target>
 
+  <!--依赖这个，这个第一个执行，也是依赖相关的操作-->
   <target name="resolve.buildscript.deps" depends="download.resolver">
     <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml"
              classpath="${maven.resolver.ant.tasks.file.path}"/>
@@ -66,6 +68,7 @@
     -->
   </target>
 
+  <!--先执行这个-->
   <target name="doGant" depends="resolve.buildscript.deps">
     <path id="gant.classpath">
       <pathelement path="${project.home}/platform/build-scripts/groovy"/>
@@ -77,6 +80,7 @@
       <classpath refid="gant.classpath"/>
     </taskdef>
 
+    <!--最终执行gradle命令，对build/scripts/idea_community.gant操作-->
     <gant file="${gant.script}" target="${gant.target}" inheritAll="true"/>
   </target>
 </project>

@@ -7,20 +7,28 @@
  Note that this script is for building IntelliJ IDEA Community Edition only. If you want to build your own product based on IntelliJ Platform,
  create a gant script for it, see javadoc for org.jetbrains.intellij.build package for details.
  -->
+
+<!--一个Build文件一个Project标签,一个Project多个target标签,默认执行build这个target标签-->
+<!--target可以选择性执行,也可以通过depens来顺序执行-->
 <project name="IntelliJ IDEA Community Edition" default="build">
   <property name="project.home" value="${basedir}"/>
 
   <!--初始化阶段-->
   <target name="init">
+    <!--如果设置了os为windows则给gradle.executable赋值为value-->
     <condition property="gradle.executable" value="${project.home}/build/dependencies/gradlew.bat"
                else="${project.home}/build/dependencies/gradlew">
       <os family="windows"/>
     </condition>
+
+    <!--执行./build/dependencies/gradlew命令,下载工程相关依赖-->
     <exec executable="${gradle.executable}" dir="${project.home}/build/dependencies" failonerror="true">
       <env key="JAVA_HOME" value="${java.home}"/>
       <arg value="--no-daemon"/>
       <arg value="setupKotlinCompiler"/>
     </exec>
+
+    <!--定义一个属性集合-->
     <propertyset id="intellij.build.properties">
       <propertyref name="build.number"/>
       <propertyref name="compile.parallel"/>
@@ -28,10 +36,15 @@
     </propertyset>
   </target>
 
+  <!--宏定义调用gant-->
   <macrodef name="call_gant">
+    <!--宏参数定义：1、ant的脚本路径 2、ant的target-->
     <attribute name="script" />
     <attribute name="target" default="default"/>
+
+    <!--执行的顺序任务集合-->
     <sequential>
+      <!--java -Xmx1500m -jar ant-launcher.jar -f gant.xml -->
       <java failonerror="true" jar="${project.home}/lib/ant/lib/ant-launcher.jar" fork="true">
         <jvmarg line="-Xmx1500m"/>
         <sysproperty key="jna.nosys" value="true" />

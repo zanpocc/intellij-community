@@ -27,6 +27,7 @@ target('updater-full': 'Build updater-full.jar which includes IDE updater with i
   }
 }
 
+//默认第一个执行这个
 target('default': 'The default target') {
   try {
     def options = new BuildOptions()
