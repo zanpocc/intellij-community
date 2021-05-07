@@ -28,6 +28,7 @@
 
   <available file="${maven.resolver.ant.tasks.file.path}" property="maven.resolver.ant.tasks.file.exists"/>
 
+  <!--下载ant的jar包到build/download目录下-->
   <target name="download.resolver" unless="maven.resolver.ant.tasks.file.exists">
     <mkdir dir="${download.cache.dir}" />
     <get
@@ -42,6 +43,7 @@
 
   <!--依赖这个，这个第一个执行，也是依赖相关的操作-->
   <target name="resolve.buildscript.deps" depends="download.resolver">
+    <!--加载maven-resolver-ant-tasks-1.2.1-uber.jar中的antlib.xml文件-->
     <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml"
              classpath="${maven.resolver.ant.tasks.file.path}"/>
 
@@ -80,7 +82,7 @@
       <classpath refid="gant.classpath"/>
     </taskdef>
 
-    <!--最终执行gradle命令，对build/scripts/idea_community.gant操作-->
+    <!--执行GantWithClasspathTask类的方法-->
     <gant file="${gant.script}" target="${gant.target}" inheritAll="true"/>
   </target>
 </project>

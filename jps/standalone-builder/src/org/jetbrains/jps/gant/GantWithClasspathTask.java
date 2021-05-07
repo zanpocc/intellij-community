@@ -23,11 +23,15 @@ import org.codehaus.gant.ant.Gant;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 
+/**
+ * 一个ant中的Task
+ */
 public class GantWithClasspathTask extends Gant {
   public static PrintStream out = null;
 
   @Override
   public void execute() throws BuildException {
+    //应用类加载器
     ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
     try {
       ClassLoader loader = getClass().getClassLoader();
@@ -47,10 +51,12 @@ public class GantWithClasspathTask extends Gant {
       try {
         Field field = Gant.class.getDeclaredField("file");
         field.setAccessible(true);
+        getProject().log("this");
         getProject().log("Starting gant script " + field.get(this));
       }
       catch (Exception ignore) {
       }
+      // 执行任务
       super.execute();
     }
     finally {
