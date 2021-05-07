@@ -10,6 +10,7 @@
 <project name="IntelliJ IDEA Community Edition" default="build">
   <property name="project.home" value="${basedir}"/>
 
+  <!--初始化阶段-->
   <target name="init">
     <condition property="gradle.executable" value="${project.home}/build/dependencies/gradlew.bat"
                else="${project.home}/build/dependencies/gradlew">
@@ -45,15 +46,18 @@
   </macrodef>
 
   <!-- build distribution archives for IntelliJ Community Edition in out/idea-ce/artifacts directory -->
+  <!--构建阶段,依赖初始化阶段完成-->
   <target name="build" depends="init">
     <call_gant script="${project.home}/build/scripts/idea_community.gant"/>
   </target>
 
+  <!--测试阶段,依赖初始化阶段完成-->
   <target name="test" depends="init">
     <call_gant script="${project.home}/build/scripts/tests_in_community.gant"/>
   </target>
 
-  <!-- Creates an updater-full.jar in ${intellij.build.output.root}/artifacts, it includes 'intellij.platform.updater' module with all its dependencies -->
+  <!-- Creates an updater-full.jar in ${intellij.build.output.root}/artifacts, it includes 'intellij.platform.updater' module with all its dependencies-->
+  <!--创建一个updater-full.jar在${intellij.build.output.root}/artifacts目录下,它包含intellij.platform.updater模块及其所有的依赖-->
   <target name="fullupdater" depends="init">
     <call_gant script="${project.home}/build/scripts/idea_community.gant" target="updater-full"/>
   </target>

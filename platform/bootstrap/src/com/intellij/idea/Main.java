@@ -27,6 +27,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * 启动类
+ */
 public final class Main {
   public static final int NO_GRAPHICS = 1;
   public static final int RESTART_FAILED = 2;
